@@ -31,6 +31,12 @@ namespace R5T.Dacia.Extensions
             return services;
         }
 
+        public static IServiceProvider BuildIntermediateServiceProvider(this IServiceCollection services)
+        {
+            var serviceProvider = services.BuildServiceProvider();
+            return serviceProvider;
+        }
+
         /// <summary>
         /// Get a service out of the current state of the service collection.
         /// </summary>
