@@ -3,6 +3,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
+using R5T.Dacia.Internals;
+
 
 namespace R5T.Dacia.Extensions
 {
