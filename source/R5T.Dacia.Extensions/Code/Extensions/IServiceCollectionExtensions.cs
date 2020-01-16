@@ -22,7 +22,7 @@ namespace R5T.Dacia.Extensions
         }
 
         /// <summary>
-        /// Allows separation of code-block for adding services.
+        /// Allows fluent separation of a code-block for adding services.
         /// </summary>
         public static IServiceCollection AddServices(this IServiceCollection services, Action<IServiceCollection> action)
         {
