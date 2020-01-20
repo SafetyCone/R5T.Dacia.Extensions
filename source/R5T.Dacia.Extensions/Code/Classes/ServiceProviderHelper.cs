@@ -15,6 +15,9 @@ namespace R5T.Dacia
     {
         #region Static
 
+        public static Lazy<IServiceProvider> EmptyServiceProvider { get; } = new Lazy<IServiceProvider>(ServiceProviderHelper.GetEmptyServiceProvider);
+
+
         /// <summary>
         /// Allows syntactic-sugar of starting a code line with <see cref="ServiceProviderHelper"/>...
         /// </summary>
