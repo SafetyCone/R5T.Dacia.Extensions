@@ -14,7 +14,7 @@ namespace R5T.Dacia.Extensions
         /// Allows separation of code-block for adding multiple services.
         /// Does not do anything special, just serves to separate code for adding the services for a multiple service.
         /// </summary>
-        public static IServiceCollection AddMultipleService(this IServiceCollection services, Action<IServiceCollection> action)
+        public static IServiceCollection AddMultipleServices(this IServiceCollection services, Action<IServiceCollection> action)
         {
             action(services);
 
@@ -89,9 +89,9 @@ namespace R5T.Dacia.Extensions
         }
 
         /// <summary>
-        /// Adds services for a multiple service in a way that allows getting services via <see cref="IServiceProviderExtensions.GetMultipleServices{TService}(IServiceProvider)"/>.
+        /// Adds services for a multiple service in a way that allows getting services via <see cref="IServiceProviderExtensions.GetMultipleService{TService}(IServiceProvider)"/>.
         /// </summary>
-        public static IServiceCollection AddMultipleServiceSingleton<TService, TImplementation>(this IServiceCollection services)
+        public static IServiceCollection AddSingletonMultipleService<TService, TImplementation>(this IServiceCollection services)
             where TService : class
             where TImplementation : class, TService
         {

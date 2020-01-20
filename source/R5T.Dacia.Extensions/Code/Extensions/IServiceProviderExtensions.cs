@@ -28,9 +28,9 @@ namespace R5T.Dacia.Extensions
         }
 
         /// <summary>
-        /// Gets multiple services added using <see cref="IServiceCollectionExtensions.AddMultipleServiceSingleton{TService, TImplementation}(IServiceCollection)"/>.
+        /// Gets multiple services added using <see cref="IServiceCollectionExtensions.AddSingletonMultipleService{TService, TImplementation}(IServiceCollection)"/>.
         /// </summary>
-        public static IEnumerable<TService> GetMultipleServices<TService>(this IServiceProvider serviceProvider)
+        public static IEnumerable<TService> GetMultipleService<TService>(this IServiceProvider serviceProvider)
         {
             var multipleServiceHolders = serviceProvider.GetServices<IMultipleServiceHolder<TService>>();
 
