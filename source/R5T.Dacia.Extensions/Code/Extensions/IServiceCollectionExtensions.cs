@@ -101,5 +101,12 @@ namespace R5T.Dacia.Extensions
 
             return services;
         }
+
+        public static IServiceCollection RunServiceAction<T>(this IServiceCollection services, ServiceAction<T> serviceAction)
+        {
+            serviceAction.Run();
+
+            return services;
+        }
     }
 }
