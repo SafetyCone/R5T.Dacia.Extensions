@@ -6,6 +6,20 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using R5T.Dacia.Internals;
 
 
+namespace R5T.Dacia
+{
+    public static class IServiceCollectionExtensions
+    {
+        public static IServiceCollection RunServiceAction<T>(this IServiceCollection services, ServiceAction<T> serviceAction)
+        {
+            serviceAction.Run();
+
+            return services;
+        }
+    }
+}
+
+
 namespace R5T.Dacia.Extensions
 {
     public static class IServiceCollectionExtensions
@@ -98,13 +112,6 @@ namespace R5T.Dacia.Extensions
             services
                 .AddSingleton<TImplementation>()
                 .AddSingleton<IMultipleServiceHolder<TService>, MultipleServiceHolder<TImplementation>>();
-
-            return services;
-        }
-
-        public static IServiceCollection RunServiceAction<T>(this IServiceCollection services, ServiceAction<T> serviceAction)
-        {
-            serviceAction.Run();
 
             return services;
         }
