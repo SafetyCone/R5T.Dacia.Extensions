@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace R5T.Dacia
 {
@@ -13,7 +15,7 @@ namespace R5T.Dacia
 
     public class ServiceAction<T>
     {
-        private Action Action { get; }
+        private Action<IServiceCollection> Action { get; }
 
 
         public static implicit operator ServiceAction<T>(DoNothingServiceAction doNothingServiceAction)
@@ -23,14 +25,19 @@ namespace R5T.Dacia
         }
 
 
-        public ServiceAction(Action action)
+        public ServiceAction(Action<IServiceCollection> action)
         {
             this.Action = action;
         }
 
-        public void Run()
+        public ServiceAction(Action action)
         {
-            this.Action();
+            this.Action = (services) => action();
+        }
+
+        public void Run(IServiceCollection services)
+        {
+            this.Action(services);
         }
     }
 }

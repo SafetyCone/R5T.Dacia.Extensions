@@ -12,7 +12,7 @@ namespace R5T.Dacia
     {
         public static IServiceCollection RunServiceAction<T>(this IServiceCollection services, ServiceAction<T> serviceAction)
         {
-            serviceAction.Run();
+            serviceAction.Run(services);
 
             return services;
         }
