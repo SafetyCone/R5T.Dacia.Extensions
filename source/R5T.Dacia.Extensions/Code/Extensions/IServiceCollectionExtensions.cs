@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -13,6 +14,16 @@ namespace R5T.Dacia
         public static IServiceCollection RunServiceAction<T>(this IServiceCollection services, ServiceAction<T> serviceAction)
         {
             serviceAction.Run(services);
+
+            return services;
+        }
+
+        public static IServiceCollection RunServiceActions<T>(this IServiceCollection services, IEnumerable<ServiceAction<T>> serviceActions)
+        {
+            foreach (var serviceAction in serviceActions)
+            {
+                services.RunServiceAction(serviceAction);
+            }
 
             return services;
         }
