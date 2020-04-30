@@ -15,6 +15,10 @@ namespace R5T.Dacia
 
     public class ServiceAction<T>
     {
+        public static DoNothingServiceAction AddedElsewhere { get; } = new DoNothingServiceAction();
+        public static DoNothingServiceAction AlreadyAdded { get; } = new DoNothingServiceAction();
+
+
         private Action<IServiceCollection> Action { get; }
 
 
