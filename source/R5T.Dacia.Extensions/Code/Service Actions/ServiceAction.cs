@@ -10,13 +10,24 @@ namespace R5T.Dacia
         public static DoNothingServiceAction AddedElsewhere { get; } = new DoNothingServiceAction();
         public static DoNothingServiceAction AlreadyAdded { get; } = new DoNothingServiceAction();
         //public static DoNothingServiceAction AddedElsewhere { get; } = new DoNothingServiceAction();
+
+
+        public static ServiceAction<T> New<T>(Action action)
+        {
+            var serviceAction = new ServiceAction<T>(action);
+            return serviceAction;
+        }
     }
 
 
     public class ServiceAction<T>
     {
+        #region Static
+
         public static DoNothingServiceAction AddedElsewhere { get; } = new DoNothingServiceAction();
         public static DoNothingServiceAction AlreadyAdded { get; } = new DoNothingServiceAction();
+
+        #endregion
 
 
         private Action<IServiceCollection> Action { get; }
