@@ -11,14 +11,24 @@ namespace R5T.Dacia
 {
     public static class IServiceCollectionExtensions
     {
-        public static IServiceCollection RunServiceAction<T>(this IServiceCollection services, ServiceAction<T> serviceAction)
+        public static IServiceCollection RunServiceAction<T>(this IServiceCollection services, IServiceAction<T> serviceAction)
         {
             serviceAction.Run(services);
 
             return services;
         }
 
-        public static IServiceCollection RunServiceActions<T>(this IServiceCollection services, IEnumerable<ServiceAction<T>> serviceActions)
+        /// <summary>
+        /// Quality-of-life overload for <see cref="IServiceCollectionExtensions.RunServiceAction{T}(IServiceCollection, IServiceAction{T})"/>.
+        /// </summary>
+        public static IServiceCollection Run<T>(this IServiceCollection services, IServiceAction<T> serviceAction)
+        {
+            services.RunServiceAction(serviceAction);
+
+            return services;
+        }
+
+        public static IServiceCollection RunServiceActions<T>(this IServiceCollection services, IEnumerable<IServiceAction<T>> serviceActions)
         {
             foreach (var serviceAction in serviceActions)
             {

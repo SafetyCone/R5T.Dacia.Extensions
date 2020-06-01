@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Microsoft.Extensions.DependencyInjection;
 
 namespace R5T.Dacia
 {
@@ -16,5 +16,16 @@ namespace R5T.Dacia
         //    var serviceAction = new ServiceAction<T>(DoNothingServiceAction.DoNothingAction);
         //    return serviceAction;
         //}
+    }
+
+    public class DoNothingServiceAction<T> : IServiceAction<T>
+    {
+        public Action<IServiceCollection> Action { get; } = (services) => { };
+
+
+        public void Run(IServiceCollection services)
+        {
+            // Do nothing.
+        }
     }
 }
