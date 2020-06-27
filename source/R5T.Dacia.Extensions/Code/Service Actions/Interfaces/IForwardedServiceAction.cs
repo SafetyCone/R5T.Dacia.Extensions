@@ -10,7 +10,7 @@ namespace R5T.Dacia
     /// <typeparam name="TService">The desired service.</typeparam>
     /// <typeparam name="TForwardedService">The service that is forwarded as an instance of the desired service.</typeparam>
     public interface IForwardedServiceAction<TService, TForwardedService> : IServiceAction<TService>
-        where TService: TForwardedService
+        where TForwardedService : TService
     {
     }
 }

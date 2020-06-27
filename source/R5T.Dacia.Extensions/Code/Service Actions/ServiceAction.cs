@@ -19,7 +19,7 @@ namespace R5T.Dacia
         }
 
         public static ForwardedServiceAction<TService, TForwardedService> Forward<TService, TForwardedService>(Action action)
-            where TService: TForwardedService
+            where TForwardedService : TService
         {
             var forwardedServiceAction = new ForwardedServiceAction<TService, TForwardedService>(action);
             return forwardedServiceAction;

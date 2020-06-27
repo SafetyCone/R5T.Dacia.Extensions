@@ -11,7 +11,7 @@ namespace R5T.Dacia
 {
     public static class IServiceCollectionExtensions
     {
-        public static IServiceCollection RunServiceAction<T>(this IServiceCollection services, IServiceAction<T> serviceAction)
+        public static IServiceCollection RunServiceAction<TService>(this IServiceCollection services, IServiceAction<TService> serviceAction)
         {
             serviceAction.Run(services);
 
@@ -21,19 +21,31 @@ namespace R5T.Dacia
         /// <summary>
         /// Quality-of-life overload for <see cref="IServiceCollectionExtensions.RunServiceAction{T}(IServiceCollection, IServiceAction{T})"/>.
         /// </summary>
-        public static IServiceCollection Run<T>(this IServiceCollection services, IServiceAction<T> serviceAction)
+        public static IServiceCollection Run<TService>(this IServiceCollection services, IServiceAction<TService> serviceAction)
         {
             services.RunServiceAction(serviceAction);
 
             return services;
         }
 
-        public static IServiceCollection RunServiceActions<T>(this IServiceCollection services, IEnumerable<IServiceAction<T>> serviceActions)
+        public static IServiceCollection RunServiceActions<TService>(this IServiceCollection services, IEnumerable<IServiceAction<TService>> serviceActions)
         {
             foreach (var serviceAction in serviceActions)
             {
                 services.RunServiceAction(serviceAction);
             }
+
+            return services;
+        }
+
+        /// <summary>
+        /// Reruns an <see cref="IServiceAction{TService}"/>.
+        /// Service actions are designed to only run once. This method allows re-running a service action.
+        /// </summary>
+        public static IServiceCollection Rerun<TService>(this IServiceCollection services, IServiceAction<TService> serviceAction)
+        {
+            // Access the service action's action directly, and run it.
+            serviceAction.Action(services);
 
             return services;
         }
