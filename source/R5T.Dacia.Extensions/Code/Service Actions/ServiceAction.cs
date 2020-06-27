@@ -12,10 +12,17 @@ namespace R5T.Dacia
         //public static DoNothingServiceAction AddedElsewhere { get; } = new DoNothingServiceAction();
 
 
-        public static ServiceAction<T> New<T>(Action action)
+        public static ServiceAction<TService> New<TService>(Action action)
         {
-            var serviceAction = new ServiceAction<T>(action);
+            var serviceAction = new ServiceAction<TService>(action);
             return serviceAction;
+        }
+
+        public static ForwardedServiceAction<TService, TForwardedService> Forward<TService, TForwardedService>(Action action)
+            where TService: TForwardedService
+        {
+            var forwardedServiceAction = new ForwardedServiceAction<TService, TForwardedService>(action);
+            return forwardedServiceAction;
         }
     }
 
@@ -24,23 +31,23 @@ namespace R5T.Dacia
     /// Basic <see cref="IServiceAction{T}"/> implementation that runs only ONCE.
     /// Note: not thread-safe.
     /// </summary>
-    public class ServiceAction<T> : IServiceAction<T>
+    public class ServiceAction<TService> : IServiceAction<TService>
     {
         #region Static
 
-        public static DoNothingServiceAction<T> AddedElsewhere { get; } = new DoNothingServiceAction<T>();
-        public static DoNothingServiceAction<T> AlreadyAdded { get; } = new DoNothingServiceAction<T>();
+        public static DoNothingServiceAction<TService> AddedElsewhere { get; } = new DoNothingServiceAction<TService>();
+        public static DoNothingServiceAction<TService> AlreadyAdded { get; } = new DoNothingServiceAction<TService>();
 
 
-        public static ServiceAction<T> New(Action action)
+        public static ServiceAction<TService> New(Action action)
         {
-            var serviceAction = new ServiceAction<T>(action);
+            var serviceAction = new ServiceAction<TService>(action);
             return serviceAction;
         }
 
-        public static ServiceAction<T> New(Action<IServiceCollection> action)
+        public static ServiceAction<TService> New(Action<IServiceCollection> action)
         {
-            var serviceAction = new ServiceAction<T>(action);
+            var serviceAction = new ServiceAction<TService>(action);
             return serviceAction;
         }
 
@@ -52,15 +59,15 @@ namespace R5T.Dacia
         private bool HasRun { get; set; } = false;
 
 
-        public static implicit operator ServiceAction<T>(DoNothingServiceAction doNothingServiceAction)
+        public static implicit operator ServiceAction<TService>(DoNothingServiceAction doNothingServiceAction)
         {
-            var serviceAction = new ServiceAction<T>(DoNothingServiceAction.DoNothingAction);
+            var serviceAction = new ServiceAction<TService>(DoNothingServiceAction.DoNothingAction);
             return serviceAction;
         }
 
-        public static implicit operator ServiceAction<T>(DoNothingServiceAction<T> doNothingServiceAction)
+        public static implicit operator ServiceAction<TService>(DoNothingServiceAction<TService> doNothingServiceAction)
         {
-            var serviceAction = new ServiceAction<T>(DoNothingServiceAction.DoNothingAction);
+            var serviceAction = new ServiceAction<TService>(DoNothingServiceAction.DoNothingAction);
             return serviceAction;
         }
 
