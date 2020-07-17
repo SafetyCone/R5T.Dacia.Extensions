@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,9 +14,22 @@ namespace R5T.Dacia
         //public static DoNothingServiceAction AddedElsewhere { get; } = new DoNothingServiceAction();
 
 
-        public static ServiceAction<TService> New<TService>(Action action)
+        public static DoNothingServiceAction<TService> ServiceAddedElsewhere<TService>()
+        {
+            return new DoNothingServiceAction<TService>();
+        }
+
+        public static IServiceAction<TService> New<TService>(Action action)
         {
             var serviceAction = new ServiceAction<TService>(action);
+            return serviceAction;
+        }
+
+        public static IServiceAction<IEnumerable<TService>> NewFromEnumerable<TService>(params IServiceAction<TService>[] serviceActions)
+        {
+            var actions = serviceActions.Select(x => x.Action);
+
+            var serviceAction = new CompositeServiceAction<TService>(actions);
             return serviceAction;
         }
 
@@ -31,7 +46,7 @@ namespace R5T.Dacia
     /// Basic <see cref="IServiceAction{T}"/> implementation that runs only ONCE.
     /// Note: not thread-safe.
     /// </summary>
-    public class ServiceAction<TService> : IServiceAction<TService>
+    public class ServiceAction<TService> : SingleRunServiceAction<TService>
     {
         #region Static
 
@@ -53,11 +68,7 @@ namespace R5T.Dacia
 
         #endregion
 
-
-        public Action<IServiceCollection> Action { get; }
-
-        private bool HasRun { get; set; } = false;
-
+        #region Operators
 
         public static implicit operator ServiceAction<TService>(DoNothingServiceAction doNothingServiceAction)
         {
@@ -71,25 +82,17 @@ namespace R5T.Dacia
             return serviceAction;
         }
 
+        #endregion
+
 
         public ServiceAction(Action<IServiceCollection> action)
+            : base(action)
         {
-            this.Action = action;
         }
 
         public ServiceAction(Action action)
+            : base(action)
         {
-            this.Action = (services) => action();
-        }
-
-        public void Run(IServiceCollection services)
-        {
-            if(!this.HasRun)
-            {
-                this.Action(services);
-
-                this.HasRun = true;
-            }
         }
     }
 }
