@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -145,6 +146,64 @@ namespace R5T.Dacia.Extensions
             services
                 .AddSingleton<TImplementation>()
                 .AddSingleton<IMultipleServiceHolder<TService>, MultipleServiceHolder<TImplementation>>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddServiceIndirects(this IServiceCollection services, Type serviceType)
+        {
+            var serviceIndirectServiceGenericType = typeof(IServiceIndirect<>);
+            var serviceIndirectImplementationGenericType = typeof(ServiceIndirect<,>);
+
+            var serviceServiceDescriptors = services
+                .Where(x => x.ServiceType == serviceType)
+                .ToList();
+
+            foreach (var serviceServiceDescriptor in serviceServiceDescriptors)
+            {
+                // Remove the service service descriptor.
+                services.Remove(serviceServiceDescriptor);
+
+                // Add the service implementation type directly as itself.
+                var serviceImplementationDescriptor = new ServiceDescriptor(serviceServiceDescriptor.ImplementationType, serviceServiceDescriptor.ImplementationType, serviceServiceDescriptor.Lifetime);
+
+                services.Add(serviceImplementationDescriptor);
+
+                // Now add the service indirect.
+                var serviceIndirectServiceType = serviceIndirectServiceGenericType.MakeGenericType(serviceServiceDescriptor.ServiceType);
+                var serviceIndirectImplementationType = serviceIndirectImplementationGenericType.MakeGenericType(serviceServiceDescriptor.ServiceType, serviceServiceDescriptor.ImplementationType);
+
+                var serviceIndirectServiceDescriptor = new ServiceDescriptor(serviceIndirectServiceType, serviceIndirectImplementationType, serviceServiceDescriptor.Lifetime);
+                services.Add(serviceIndirectServiceDescriptor);
+            }
+
+            return services;
+        }
+
+        public static IServiceCollection AddServiceIndirects<TService>(this IServiceCollection services)
+        {
+            services.AddServiceIndirects(typeof(TService));
+
+            return services;
+        }
+
+        public static IServiceCollection RemoveServices(this IServiceCollection services, Type serviceType)
+        {
+            var serviceDescriptors = services
+                .Where(x => x.ServiceType == serviceType)
+                .ToList();
+
+            serviceDescriptors.ForEach(serviceDescriptor =>
+            {
+                services.Remove(serviceDescriptor);
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection RemoveServices<TService>(this IServiceCollection services)
+        {
+            services.RemoveServices(typeof(TService));
 
             return services;
         }
