@@ -12,6 +12,40 @@ namespace R5T.Dacia
 {
     public static class IServiceCollectionExtensions
     {
+        /// <summary>
+        /// Requests for <typeparamref name="TService"/> are satisfied by providing an instance of <typeparamref name="TDerivedService"/>.
+        /// </summary>
+        public static IServiceCollection AddSingletonForward<TService, TDerivedService>(this IServiceCollection services,
+            IServiceAction<TDerivedService> derivedServiceAction)
+            where TService : class
+            where TDerivedService : class, TService
+        {
+            services
+                .AddSingleton<TService>(serviceProvider =>
+                {
+                    var service = serviceProvider.GetRequiredService<TDerivedService>();
+                    return service;
+                })
+                .Run(derivedServiceAction)
+                ;
+
+            return services;
+        }
+
+        /// <summary>
+        /// Requests for <typeparamref name="TService"/> are satisfied by providing an instance of <typeparamref name="TDerivedService"/>.
+        /// </summary>
+        public static IServiceAction<TService> AddSingletonForwardAction<TService, TDerivedService>(this IServiceCollection services,
+            IServiceAction<TDerivedService> derivedServiceAction)
+            where TService : class
+            where TDerivedService : class, TService
+        {
+            var serviceAction = ServiceAction.New<TService>(() => services.AddSingletonForward<TService, TDerivedService>(
+                derivedServiceAction));
+
+            return serviceAction;
+        }
+
         public static IServiceCollection RunServiceAction<TService>(this IServiceCollection services, IServiceAction<TService> serviceAction)
         {
             serviceAction.Run(services);
