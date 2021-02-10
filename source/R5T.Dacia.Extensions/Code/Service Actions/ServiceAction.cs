@@ -33,6 +33,14 @@ namespace R5T.Dacia
             return serviceAction;
         }
 
+        public static IServiceAction<IEnumerable<TService>> NewFromEnumerable<TService>(IEnumerable<IServiceAction<TService>> serviceActions)
+        {
+            var actions = serviceActions.Select(x => x.Action);
+
+            var serviceAction = new CompositeServiceAction<TService>(actions);
+            return serviceAction;
+        }
+
         public static ForwardedServiceAction<TService, TForwardedService> Forward<TService, TForwardedService>(Action action)
             where TForwardedService : TService
         {
