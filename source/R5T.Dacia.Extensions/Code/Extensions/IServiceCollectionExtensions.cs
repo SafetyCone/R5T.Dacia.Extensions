@@ -8,6 +8,23 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using R5T.Dacia.Internals;
 
 
+namespace Microsoft.Extensions.DependencyInjection
+{
+    public static class IServiceCollectionExtensions
+    {
+        /// <summary>
+        /// A method that performs no action on an <see cref="IServiceCollection"/> instance.
+        /// Useful for when a null-operation is required in creating a service provider.
+        /// </summary>
+        public static IServiceCollection DoNothing(this IServiceCollection services)
+        {
+            // Do nothing.
+
+            return services;
+        }
+    }
+}
+
 namespace R5T.Dacia
 {
     public static class IServiceCollectionExtensions
