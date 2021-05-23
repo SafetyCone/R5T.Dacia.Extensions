@@ -13,6 +13,15 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class IServiceCollectionExtensions
     {
         /// <summary>
+        /// Builds a <see cref="ServiceProvider"/>, but allows marking that service provider as intermediate.
+        /// </summary>
+        public static ServiceProvider BuildIntermediateServiceProvider(this IServiceCollection services)
+        {
+            var serviceProvider = services.BuildServiceProvider();
+            return serviceProvider;
+        }
+
+        /// <summary>
         /// A method that performs no action on an <see cref="IServiceCollection"/> instance.
         /// Useful for when a null-operation is required in creating a service provider.
         /// </summary>
@@ -21,6 +30,32 @@ namespace Microsoft.Extensions.DependencyInjection
             // Do nothing.
 
             return services;
+        }
+
+        /// <summary>
+        /// Builds a <see cref="ServiceProvider"/> to get a <typeparamref name="TService"/> instance from a partially-configured <see cref="IServiceCollection"/>.
+        /// Returns the <see cref="ServiceProvider"/> instance to allow caller to control its <see cref="IDisposable"/> lifetime.
+        /// </summary>
+        public static ServiceProvider GetIntermediateRequiredService<TService>(this IServiceCollection services, out TService service)
+        {
+            var serviceProvider = services.BuildServiceProvider();
+
+            service = serviceProvider.GetRequiredService<TService>();
+
+            return serviceProvider;
+        }
+
+        /// <summary>
+        /// Builds a <see cref="ServiceProvider"/> to get a <typeparamref name="TService"/> instance from a partially-configured <see cref="IServiceCollection"/>.
+        /// Note: Because <see cref="ServiceProvider"/> is <see cref="IDisposable"/>, the service provider instance used to create the <typeparamref name="TService"/> instance is disposed, meaning the service instance escapes its service provider context.
+        /// This can cause problems when the service, or any of its dependency services, are <see cref="IDisposable"/> since the <see cref="ServiceProvider"/> manages those disposable lifetimes.
+        /// </summary>
+        public static TService GetIntermediateRequiredService<TService>(this IServiceCollection services)
+        {
+            using(services.GetIntermediateRequiredService(out TService service))
+            {
+                return service;
+            }
         }
     }
 }
@@ -128,26 +163,6 @@ namespace R5T.Dacia.Extensions
             action(services);
 
             return services;
-        }
-
-        public static IServiceProvider BuildIntermediateServiceProvider(this IServiceCollection services)
-        {
-            var serviceProvider = services.BuildServiceProvider();
-            return serviceProvider;
-        }
-
-        /// <summary>
-        /// Get a service out of the current state of the service collection.
-        /// </summary>
-        /// <remarks>
-        /// Build a service provider from the current state of the service collection and get a required service.
-        /// </remarks>
-        public static T GetIntermediateRequiredService<T>(this IServiceCollection services)
-        {
-            var intermediateServiceProvider = services.BuildServiceProvider();
-
-            var output = intermediateServiceProvider.GetRequiredService<T>();
-            return output;
         }
 
         /// <summary>
