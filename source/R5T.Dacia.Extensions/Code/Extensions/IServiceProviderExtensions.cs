@@ -1,11 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.Extensions.DependencyInjection;
 
 using R5T.Dacia.Internals;
 
+
+namespace System
+{
+    public static class IServiceProviderExtensions
+    {
+        public static TOutput RunFunc<TService, TOutput>(this IServiceProvider serviceProvider,
+            Func<TService, TOutput> function)
+        {
+            var service = serviceProvider.GetRequiredService<TService>();
+
+            var output = function(service);
+            return output;
+        }
+
+        public static Task<TOutput> RunFunc<TService, TOutput>(this IServiceProvider serviceProvider,
+            Func<TService, Task<TOutput>> function)
+        {
+            var service = serviceProvider.GetRequiredService<TService>();
+
+            var output = function(service);
+            return output;
+        }
+    }
+}
 
 namespace R5T.Dacia.Extensions
 {
