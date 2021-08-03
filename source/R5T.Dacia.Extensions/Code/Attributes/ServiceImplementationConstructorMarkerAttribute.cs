@@ -9,7 +9,7 @@ namespace R5T.Dacia
     [AttributeUsage(AttributeTargets.Constructor, AllowMultiple = false, Inherited = false)]
     public sealed class ServiceImplementationConstructorMarkerAttribute : Attribute
     {
-        private bool zIsServiceImplementationConstructor;
+        private readonly bool zIsServiceImplementationConstructor;
         public bool IsServiceImplementationConstructor
         {
             get

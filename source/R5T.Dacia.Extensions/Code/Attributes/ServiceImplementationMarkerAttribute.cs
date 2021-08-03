@@ -10,7 +10,7 @@ namespace R5T.Dacia
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class ServiceImplementationMarkerAttribute : Attribute
     {
-        private bool zIsServiceImplementation;
+        private readonly bool zIsServiceImplementation;
         public bool IsServiceImplementation
         {
             get

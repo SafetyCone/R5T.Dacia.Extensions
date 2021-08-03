@@ -7,10 +7,10 @@ namespace R5T.Dacia
     /// Marks an interface as being a service definition.
     /// Also allows specifying that an interface is *not* a service definition. (Useful for decorating extraneous members that also happen to be in a service definition file.)
     /// </summary>
-    [AttributeUsage(AttributeTargets.Interface, Inherited = false, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Interface, Inherited = false, AllowMultiple = false)]
     public sealed class ServiceDefinitionMarkerAttribute : Attribute
     {
-        private bool zIsServiceDefinition;
+        private readonly bool zIsServiceDefinition;
         public bool IsServiceDefinition
         {
             get
